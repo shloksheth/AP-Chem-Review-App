@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AP Chem — Units 7 & 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0e0f14;
+  --surface:#161820;
+  --card:#1d1f2a;
+  --border:#2a2d3e;
+  --border2:#363a52;
+  --text:#e8eaf2;
+  --muted:#7b7f9e;
+  --dim:#4a4d65;
+  --gold:#f5c842;
+  --gold2:#e6a800;
+  --teal:#2dd4bf;
+  --teal2:#0d9488;
+  --rose:#fb7185;
+  --violet:#a78bfa;
+  --green:#4ade80;
+  --orange:#fb923c;
+  --serif:'Instrument Serif',serif;
+  --sans:'Outfit',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --nav-h:64px;
+  --bottom-h:60px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans)}
+
+/* ── LAYOUT ── */
+#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative;background:var(--bg)}
+#topbar{height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0;position:relative;z-index:50}
+#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+#bottomnav{height:var(--bottom-h);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;padding:0 4px}
+
+/* ── TOP BAR ── */
+.topbar-icon{font-size:1.3rem}
+.topbar-title{font-family:var(--serif);font-size:1.1rem;font-weight:400;flex:1}
+.topbar-title span{color:var(--gold);font-style:italic}
+.topbar-badge{font-family:var(--mono);font-size:0.65rem;background:var(--card);border:1px solid var(--border2);color:var(--muted);padding:3px 9px;border-radius:20px}
+
+/* ── BOTTOM NAV ── */
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--dim);cursor:pointer;padding:6px 2px;transition:color .15s;min-width:0}
+.bnav-btn .bicon{font-size:1.25rem;line-height:1}
+.bnav-btn .blabel{font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.bnav-btn.active{color:var(--gold)}
+.bnav-btn.active .bicon{filter:drop-shadow(0 0 6px var(--gold))}
+
+/* ── PAGES ── */
+.page{display:none;padding:20px 16px 32px;animation:rise .2s ease}
+.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── TYPOGRAPHY ── */
+.page-title{font-family:var(--serif);font-size:1.8rem;font-style:italic;color:var(--text);margin-bottom:4px;line-height:1.2}
+.page-sub{font-size:0.82rem;color:var(--muted);margin-bottom:22px}
+h3{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+p{font-size:0.9rem;color:#b0b3cc;line-height:1.75;margin-bottom:10px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.card.gold-border{border-color:rgba(245,200,66,0.3)}
+.card.teal-border{border-color:rgba(45,212,191,0.3)}
+.card.rose-border{border-color:rgba(251,113,133,0.3)}
+.card.violet-border{border-color:rgba(167,139,250,0.3)}
+
+.topic-pill{display:inline-block;font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.pill-u7{background:rgba(245,200,66,0.12);color:var(--gold)}
+.pill-u8{background:rgba(45,212,191,0.12);color:var(--teal)}
+
+.card-title{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:10px;line-height:1.3}
+
+/* ── FORMULA ── */
+.formula{font-family:var(--mono);font-size:0.8rem;background:#0a0b10;border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:8px;padding:13px 15px;margin:12px 0;color:#7dd3fc;line-height:2;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.formula .cm{color:var(--dim);font-size:0.72rem}
+.formula .hi{color:var(--gold)}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:9px;padding:12px 15px;margin:12px 0;font-size:0.86rem;line-height:1.65}
+.callout strong{display:block;font-weight:600;margin-bottom:3px}
+.callout.warn{background:rgba(245,200,66,0.08);border-left:3px solid var(--gold);color:#d4b96a}
+.callout.info{background:rgba(45,212,191,0.08);border-left:3px solid var(--teal);color:#6bcfc6}
+.callout.danger{background:rgba(251,113,133,0.08);border-left:3px solid var(--rose);color:#f0909e}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:12px 0;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:280px}
+th{background:var(--border);color:var(--text);padding:9px 12px;text-align:left;font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:.04em}
+td{padding:8px 12px;border-bottom:1px solid var(--border);color:#b0b3cc}
+tr:last-child td{border-bottom:none}
+
+/* ── GRID ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.mini-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:13px}
+.mini-card h4{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px}
+.mini-card li{font-family:var(--mono);font-size:0.78rem;padding:3px 0;border-bottom:1px solid var(--border);color:var(--text);list-style:none}
+.mini-card li:last-child{border-bottom:none}
+
+/* ══════════ PROBLEMS PAGE ══════════ */
+.prob-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.score-chip{font-family:var(--mono);font-size:0.75rem;background:var(--card);border:1px solid var(--border2);padding:5px 14px;border-radius:20px;color:var(--teal)}
+
+.prob-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.prob-tag{font-family:var(--mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.prob-q{font-size:0.93rem;font-weight:500;color:var(--text);margin-bottom:16px;line-height:1.6}
+.prob-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.choice-btn{width:100%;text-align:left;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);color:#b0b3cc;font-size:0.86rem;cursor:pointer;transition:all .15s;line-height:1.4;font-family:var(--sans)}
+.choice-btn:hover:not([disabled]){border-color:var(--teal);background:rgba(45,212,191,0.06);color:var(--text)}
+.choice-btn.correct{border-color:var(--green);background:rgba(74,222,128,0.08);color:var(--green);font-weight:500}
+.choice-btn.wrong{border-color:var(--rose);background:rgba(251,113,133,0.08);color:var(--rose)}
+.choice-btn[disabled]{cursor:default}
+.sol-box{background:#0a0b10;border:1px solid var(--border);border-left:3px solid var(--violet);border-radius:9px;padding:14px 15px;font-size:0.84rem;line-height:1.75;color:#b0b3cc;display:none;margin-top:8px}
+.sol-box.show{display:block;animation:rise .2s}
+.sol-box .sl{font-family:var(--mono);font-size:0.63rem;color:var(--violet);margin-bottom:7px;display:block;text-transform:uppercase;letter-spacing:.08em}
+.sol-box .mth{font-family:var(--mono);font-size:0.8rem;color:#7dd3fc;display:block;margin:4px 0;background:rgba(125,211,252,0.05);padding:4px 8px;border-radius:4px}
+
+/* ══════════ GENERATOR PAGE ══════════ */
+.gen-controls{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px}
+.gen-label{font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.topic-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.topic-chip{font-size:0.78rem;padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.topic-chip.sel{border-color:var(--gold);background:rgba(245,200,66,0.1);color:var(--gold)}
+.diff-row{display:flex;gap:8px;margin-bottom:18px}
+.diff-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:0.8rem;text-align:center;transition:all .15s;font-family:var(--sans)}
+.diff-btn.sel{border-color:var(--teal);background:rgba(45,212,191,0.1);color:var(--teal)}
+.gen-btn{width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0e0f14;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:var(--sans);letter-spacing:.02em;transition:opacity .15s}
+.gen-btn:hover{opacity:.9}
+.gen-btn:disabled{opacity:.5;cursor:default}
+
+#gen-result{display:none}
+#gen-result.show{display:block;animation:rise .25s}
+
+/* ══════════ AI CHAT PAGE ══════════ */
+#chat-wrap{display:none;flex-direction:column;height:calc(100vh - var(--nav-h) - var(--bottom-h));position:absolute;top:0;left:0;right:0;bottom:0}
+#chat-wrap.active{display:flex}
+#chat-messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;animation:rise .2s}
+.msg.user{align-self:flex-end}
+.msg.assistant{align-self:flex-start}
+.msg-bubble{padding:12px 15px;border-radius:14px;font-size:0.88rem;line-height:1.65}
+.msg.user .msg-bubble{background:linear-gradient(135deg,rgba(245,200,66,0.2),rgba(245,200,66,0.1));border:1px solid rgba(245,200,66,0.25);color:var(--text);border-bottom-right-radius:4px}
+.msg.assistant .msg-bubble{background:var(--card);border:1px solid var(--border);color:#c0c3db;border-bottom-left-radius:4px}
+.msg.assistant .msg-bubble code{font-family:var(--mono);font-size:0.78rem;background:rgba(125,211,252,0.1);color:#7dd3fc;padding:1px 5px;border-radius:3px}
+.msg-typing{display:flex;align-items:center;gap:4px;padding:14px 16px}
+.dot{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:bounce .9s infinite}
+.dot:nth-child(2){animation-delay:.15s}
+.dot:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:scale(.7);opacity:.5}40%{transform:scale(1);opacity:1}}
+
+#chat-input-area{padding:10px 14px 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:9px}
+#chat-input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px 13px;color:var(--text);font-size:0.88rem;font-family:var(--sans);resize:none;min-height:42px;max-height:120px;outline:none;-webkit-overflow-scrolling:touch}
+#chat-input:focus{border-color:var(--border2)}
+#chat-send{width:42px;height:42px;border-radius:12px;border:none;background:var(--gold);color:#0e0f14;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+#chat-send:hover{opacity:.85}
+#chat-send:disabled{opacity:.4;cursor:default}
+.chat-starter{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.starter-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--muted);font-size:0.83rem;cursor:pointer;text-align:left;transition:all .15s;font-family:var(--sans)}
+.starter-btn:hover{border-color:var(--gold);color:var(--text)}
+
+/* ══════════ REMEMBER PAGE ══════════ */
+.remember-hero{background:linear-gradient(135deg,rgba(245,200,66,0.08),rgba(167,139,250,0.06));border:1px solid rgba(245,200,66,0.2);border-radius:16px;padding:22px;margin-bottom:20px}
+.remember-hero .rh-title{font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--gold);margin-bottom:6px}
+.remember-hero p{color:var(--muted);font-size:0.85rem;margin:0}
+
+.sticky{position:relative;border-radius:10px;padding:16px 16px 14px;margin-bottom:12px;border:1px solid}
+.sticky::before{content:'';position:absolute;top:-4px;left:16px;width:32px;height:6px;border-radius:2px}
+.sticky.y{background:rgba(245,200,66,0.06);border-color:rgba(245,200,66,0.2)}
+.sticky.y::before{background:var(--gold)}
+.sticky.b{background:rgba(125,211,252,0.05);border-color:rgba(125,211,252,0.2)}
+.sticky.b::before{background:#7dd3fc}
+.sticky.g{background:rgba(74,222,128,0.05);border-color:rgba(74,222,128,0.2)}
+.sticky.g::before{background:var(--green)}
+.sticky.p{background:rgba(167,139,250,0.05);border-color:rgba(167,139,250,0.2)}
+.sticky.p::before{background:var(--violet)}
+.sticky h4{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:6px}
+.sticky p{font-size:0.86rem;color:#9095b5;margin:0;line-height:1.65}
+
+.trap-list{display:flex;flex-direction:column;gap:0}
+.trap-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+.trap-item:last-child{border-bottom:none}
+.trap-num{font-family:var(--mono);font-size:0.72rem;color:var(--rose);background:rgba(251,113,133,0.1);border-radius:50%;width:26px;height:26px;min-width:26px;display:flex;align-items:center;justify-content:center}
+.trap-text{font-size:0.87rem;color:#9095b5;line-height:1.65}
+.trap-text strong{color:var(--text);display:block;margin-bottom:2px;font-size:0.9rem}
+
+/* ══════════ NOTES SECTION TOGGLE ══════════ */
+.section-toggle{width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:8px;transition:border-color .15s;text-align:left}
+.section-toggle:hover{border-color:var(--border2)}
+.section-toggle.open{border-color:var(--gold);border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:0}
+.st-left{display:flex;align-items:center;gap:10px}
+.st-icon{font-size:1rem}
+.st-title{font-size:0.92rem;font-weight:600;color:var(--text)}
+.st-sub{font-size:0.72rem;color:var(--muted);margin-top:1px}
+.st-arrow{color:var(--muted);font-size:0.8rem;transition:transform .2s}
+.section-toggle.open .st-arrow{transform:rotate(180deg)}
+.section-body{background:var(--card);border:1px solid var(--gold);border-top:none;border-bottom-left-radius:12px;border-bottom-right-radius:12px;padding:18px;margin-bottom:14px;display:none}
+.section-body.open{display:block;animation:rise .2s}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .4s ease}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <span class="topbar-icon">⚗</span>
+    <div class="topbar-title">AP Chem <span>Units 7–8</span></div>
+    <div class="topbar-badge" id="top-badge">Quiz Tomorrow</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ══ NOTES PAGE ══ -->
+    <div id="page-notes" class="page active">
+      <div class="page-title">Study Notes</div>
+      <p class="page-sub">Tap any topic to expand it</p>
+
+      <!-- U7: Molar Solubility -->
+      <button class="section-toggle" onclick="toggleSection('ksp')">
+        <div class="st-left">
+          <span class="st-icon">🧪</span>
+          <div><div class="st-title">Ksp & Molar Solubility</div><div class="st-sub">Unit 7 · Ksp, ICE tables, common ion</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-ksp">
+        <div class="topic-pill pill-u7">Unit 7</div>
+        <p><strong style="color:var(--text)">Molar solubility (s)</strong> = moles of a salt that dissolve per liter before equilibrium. Ksp is the equilibrium constant for the dissolving process.</p>
+        <div class="callout info"><strong>One sentence:</strong> Molar solubility is how much of a salt can dissolve in 1 L at equilibrium.</div>
+        <p>Solids are NEVER in K expressions. Only aqueous ions appear.</p>
+        <div class="formula">CaF₂(s) ⇌ Ca²⁺(aq) + 2F⁻(aq)
+Ksp = [Ca²⁺][F⁻]² <span class="cm">← solid excluded</span>
+
+ICE with s = moles dissolved:
+[Pb²⁺] = s,  [Cl⁻] = 2s
+Ksp = (s)(2s)² = <span class="hi">4s³</span>  <span class="cm">← (2s)²=4s², NOT 2s²!</span></div>
+        <div class="callout warn"><strong>⚠ #1 Ksp mistake:</strong> (2s)² = 4s², not 2s². The coefficient GETS the exponent applied to it.</div>
+        <p><strong style="color:var(--text)">Common ion effect:</strong> If the solution already has one of the product ions, solubility decreases (Le Châtelier shifts left). Set that ion's initial value ≠ 0 in the ICE table. Ksp itself does NOT change — only temperature changes K.</p>
+      </div>
+
+      <!-- U8.1: Conjugate Pairs -->
+      <button class="section-toggle" onclick="toggleSection('conj')">
+        <div class="st-left">
+          <span class="st-icon">⇌</span>
+          <div><div class="st-title">Brønsted-Lowry & Conjugate Pairs</div><div class="st-sub">Unit 8.1 · Acids, bases, H⁺ transfer</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-conj">
+        <div class="topic-pill pill-u8">Unit 8.1</div>
+        <p><strong style="color:var(--text)">Acid</strong> = H⁺ donor. <strong style="color:var(--text)">Base</strong> = H⁺ acceptor. Every reaction has two conjugate pairs — species differing by exactly one H⁺.</p>
+        <div class="formula">HF + H₂O ⇌ H₃O⁺ + F⁻
+Pair 1: HF (acid) / F⁻ (conjugate base)
+Pair 2: H₂O (base) / H₃O⁺ (conjugate acid)</div>
+        <div class="callout info"><strong>The +1/−1 rule:</strong> Conjugate acid = original + H⁺ (charge ↑1). Conjugate base = original − H⁺ (charge ↓1). NH₃ + H⁺ = NH₄⁺. NH₃ − H⁺ = NH₂⁻.</div>
+        <p>H₃O⁺ is called "conjugate acid" because it was formed when H₂O accepted a proton in this reaction. In a different reaction it can donate H⁺ on its own. "Conjugate" describes the relationship, not the molecule type.</p>
+      </div>
+
+      <!-- U8.2-3: pH & Kw -->
+      <button class="section-toggle" onclick="toggleSection('ph')">
+        <div class="st-left">
+          <span class="st-icon">📊</span>
+          <div><div class="st-title">pH, pOH & Kw</div><div class="st-sub">Unit 8.2–8.3 · The pH scale</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-ph">
+        <div class="topic-pill pill-u8">Unit 8.2–8.3</div>
+        <p>Water autoionizes: 2H₂O ⇌ H₃O⁺ + OH⁻. Kw = 1.0×10⁻¹⁴ at 25°C — holds in every aqueous solution.</p>
+        <div class="formula">Kw = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴
+pH = −log[H⁺]   |   pOH = −log[OH⁻]
+pH + pOH = <span class="hi">14</span></div>
+        <div class="tbl-wrap"><table>
+          <tr><th>Solution</th><th>pH</th><th>[H⁺]</th></tr>
+          <tr><td>Acidic</td><td>&lt; 7</td><td>&gt; 10⁻⁷ M</td></tr>
+          <tr><td>Neutral</td><td>= 7</td><td>10⁻⁷ M</td></tr>
+          <tr><td>Basic</td><td>&gt; 7</td><td>&lt; 10⁻⁷ M</td></tr>
+        </table></div>
+      </div>
+
+      <!-- U8.4: Strong acids -->
+      <button class="section-toggle" onclick="toggleSection('strong')">
+        <div class="st-left">
+          <span class="st-icon">💥</span>
+          <div><div class="st-title">Strong Acids & Bases</div><div class="st-sub">Unit 8.4 · 100% dissociation</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-strong">
+        <div class="topic-pill pill-u8">Unit 8.4</div>
+        <p>Strong acids/bases dissociate <strong style="color:var(--text)">completely</strong>. [H⁺] = starting concentration. No ICE table needed.</p>
+        <div class="formula">0.050 M HCl → [H⁺] = 0.050 M
+pH = −log(0.050) = <span class="hi">1.30</span></div>
+        <div class="grid2">
+          <div class="mini-card">
+            <h4>7 Strong Acids</h4>
+            <ul><li>HCl</li><li>HBr</li><li>HI</li><li>HNO₃</li><li>H₂SO₄ (1st H)</li><li>HClO₄</li><li>HClO₃</li></ul>
+          </div>
+          <div class="mini-card">
+            <h4>Strong Bases</h4>
+            <ul><li>LiOH, NaOH, KOH</li><li>RbOH, CsOH</li><li>Ca(OH)₂</li><li>Sr(OH)₂</li><li>Ba(OH)₂</li></ul>
+          </div>
+        </div>
+        <div class="callout danger"><strong>HF is NOT strong!</strong> HF is weak (Ka=7.2×10⁻⁴). Not on the list = weak acid.</div>
+      </div>
+
+      <!-- U8.5: Ka -->
+      <button class="section-toggle" onclick="toggleSection('ka')">
+        <div class="st-left">
+          <span class="st-icon">⚖️</span>
+          <div><div class="st-title">Ka & Weak Acids</div><div class="st-sub">Unit 8.5 · ICE tables, % dissociation</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-ka">
+        <div class="topic-pill pill-u8">Unit 8.5</div>
+        <p>Ka measures how much a weak acid dissociates. Same structure as Ksp — just an equilibrium constant. <strong style="color:var(--text)">Larger Ka = stronger acid.</strong></p>
+        <div class="formula">HA + H₂O ⇌ H₃O⁺ + A⁻
+Ka = [H₃O⁺][A⁻] / [HA]  <span class="cm">← water excluded</span>
+
+ICE → let x = [H⁺] formed:
+Ka ≈ x²/C  →  x = <span class="hi">√(Ka × C)</span>
+pH = −log(x)
+
+% dissociation = (x/C₀) × 100%</div>
+        <div class="callout info"><strong>Approximation check:</strong> x/C &lt; 5% → valid. If not, use the quadratic. Diluting increases % dissociation (Le Châtelier shifts right).</div>
+      </div>
+
+      <!-- U8.6: Kb -->
+      <button class="section-toggle" onclick="toggleSection('kb')">
+        <div class="st-left">
+          <span class="st-icon">🔗</span>
+          <div><div class="st-title">Kb & the Ka×Kb Relationship</div><div class="st-sub">Unit 8.6 · Weak bases, conjugate pairs</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-kb">
+        <div class="topic-pill pill-u8">Unit 8.6</div>
+        <p>Same ICE logic as Ka, but solve for [OH⁻] first, then convert to pH.</p>
+        <div class="formula">B + H₂O ⇌ BH⁺ + OH⁻
+Kb = [BH⁺][OH⁻] / [B]
+x = √(Kb × C) = [OH⁻]
+pOH = −log(x)  →  pH = 14 − pOH</div>
+        <div class="callout warn"><strong>★ Ka × Kb = Kw = 1.0×10⁻¹⁴ (conjugate pairs!)</strong> pKa + pKb = 14. Most tested relationship on the AP. Know it cold.</div>
+      </div>
+
+      <!-- U8.7: Polyprotic -->
+      <button class="section-toggle" onclick="toggleSection('poly')">
+        <div class="st-left">
+          <span class="st-icon">🔢</span>
+          <div><div class="st-title">Polyprotic Acids</div><div class="st-sub">Unit 8.7 · Multiple Ka values</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-poly">
+        <div class="topic-pill pill-u8">Unit 8.7</div>
+        <p>Acids that donate more than one H⁺. Each step has its own Ka, always <strong style="color:var(--text)">decreasing: Ka1 >> Ka2 >> Ka3.</strong></p>
+        <div class="formula">H₂CO₃ ⇌ H⁺ + HCO₃⁻   Ka1 = 4.3×10⁻⁷
+HCO₃⁻  ⇌ H⁺ + CO₃²⁻    Ka2 = 4.7×10⁻¹¹
+<span class="cm">pH determined by Ka1 only (Ka2 negligible)</span></div>
+        <p><strong style="color:var(--text)">Amphoteric species:</strong> the intermediate ion (like HCO₃⁻) can act as acid OR base. H₂SO₄ is special: 1st H is strong (complete), 2nd H is weak (Ka2 = 0.012).</p>
+      </div>
+
+      <!-- U8.8: Salt hydrolysis -->
+      <button class="section-toggle" onclick="toggleSection('salt')">
+        <div class="st-left">
+          <span class="st-icon">🧂</span>
+          <div><div class="st-title">Salt Hydrolysis</div><div class="st-sub">Unit 8.8 · Acidic, basic, neutral salts</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-salt">
+        <div class="topic-pill pill-u8">Unit 8.8</div>
+        <p>When salts dissolve, the ion from the <strong style="color:var(--text)">weak partner hydrolyzes</strong>. The strong partner's ion is a spectator.</p>
+        <div class="tbl-wrap"><table>
+          <tr><th>Salt from</th><th>pH</th></tr>
+          <tr><td>Strong acid + Strong base (NaCl)</td><td>Neutral (7)</td></tr>
+          <tr><td>Weak acid + Strong base (NaCH₃COO)</td><td>Basic (&gt;7)</td></tr>
+          <tr><td>Strong acid + Weak base (NH₄Cl)</td><td>Acidic (&lt;7)</td></tr>
+          <tr><td>Weak acid + Weak base</td><td>Compare Ka vs Kb</td></tr>
+        </table></div>
+        <p>To find pH: Kb = Kw/Ka for basic salts. Ka = Kw/Kb for acidic salts. Then ICE table.</p>
+      </div>
+
+      <!-- U8.9: Buffers -->
+      <button class="section-toggle" onclick="toggleSection('buf')">
+        <div class="st-left">
+          <span class="st-icon">🛡️</span>
+          <div><div class="st-title">Buffers & Henderson-Hasselbalch</div><div class="st-sub">Unit 8.9 · The most tested section</div></div>
+        </div>
+        <span class="st-arrow">▼</span>
+      </button>
+      <div class="section-body" id="body-buf">
+        <div class="topic-pill pill-u8">Unit 8.9</div>
+        <p>A buffer resists pH change. It contains a <strong style="color:var(--text)">weak acid + its conjugate base</strong> in significant amounts.</p>
+        <div class="callout info"><strong>How it works:</strong> Add H⁺ → A⁻ neutralizes it (A⁻+H⁺→HA). Add OH⁻ → HA neutralizes it (HA+OH⁻→A⁻+H₂O).</div>
+        <div class="formula">Henderson-Hasselbalch:
+pH = pKa + log([A⁻] / [HA])
+
+When [A⁻]=[HA]: pH = <span class="hi">pKa</span>  (max capacity)
+Effective range: pKa ± 1</div>
+        <div class="callout warn"><strong>⚠ Stoichiometry FIRST!</strong> If strong acid/base is added to a buffer, calculate new [HA] and [A⁻] after neutralization, THEN use H-H. This is the #1 buffer mistake.</div>
+      </div>
+    </div>
+
+    <!-- ══ PROBLEMS PAGE ══ -->
+    <div id="page-problems" class="page">
+      <div class="page-title">Problems</div>
+      <p class="page-sub">20 problems · tap to answer</p>
+      <div class="prob-header">
+        <div class="score-chip" id="score-chip">Score: 0 / 0</div>
+      </div>
+      <div id="problems-container"></div>
+    </div>
+
+    <!-- ══ GENERATOR PAGE ══ -->
+    <div id="page-gen" class="page">
+      <div class="page-title">Problem Generator</div>
+      <p class="page-sub">Custom problems on demand</p>
+      <div class="gen-controls">
+        <div class="gen-label">Topic</div>
+        <div class="topic-chips">
+          <button class="topic-chip sel" onclick="toggleTopic(this,'ksp')">Ksp</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'conjugate')">Conjugate Pairs</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'ph')">pH Calc</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'ka')">Ka/ICE</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'kb')">Ka×Kb</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'salt')">Salt Hydrolysis</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'buffer')">Buffers / H-H</button>
+          <button class="topic-chip" onclick="toggleTopic(this,'polyprotic')">Polyprotic</button>
+        </div>
+        <div class="gen-label">Difficulty</div>
+        <div class="diff-row">
+          <button class="diff-btn sel" onclick="setDiff(this,'easy')">Easy</button>
+          <button class="diff-btn" onclick="setDiff(this,'medium')">Medium</button>
+          <button class="diff-btn" onclick="setDiff(this,'hard')">Hard</button>
+        </div>
+        <button class="gen-btn" id="gen-btn" onclick="generateProblem()">✦ Generate Problem</button>
+      </div>
+      <div id="gen-result"></div>
+    </div>
+
+    <!-- ══ AI CHAT PAGE ══ -->
+    <div id="page-chat" class="page" style="padding:0;height:calc(100vh - var(--nav-h) - var(--bottom-h));display:none;flex-direction:column">
+      <div id="chat-messages">
+        <div class="msg assistant">
+          <div class="msg-bubble">
+            👋 Hey! I'm your AP Chem tutor. Ask me anything about Units 7–8 — Ksp, pH calculations, buffers, Ka/Kb, whatever you're stuck on.<br><br>I'll explain it the same way we've been going through it together.
+          </div>
+        </div>
+        <div style="padding:4px 0">
+          <p style="font-size:0.75rem;color:var(--dim);text-align:center;margin:0 0 8px">Try asking:</p>
+          <div class="chat-starter">
+            <button class="starter-btn" onclick="sendStarter(this)">Why does (2s)² = 4s² and not 2s²?</button>
+            <button class="starter-btn" onclick="sendStarter(this)">Walk me through a Ka ICE table step by step</button>
+            <button class="starter-btn" onclick="sendStarter(this)">What's the difference between Ka and Ksp?</button>
+            <button class="starter-btn" onclick="sendStarter(this)">How do I know if a salt solution is acidic or basic?</button>
+          </div>
+        </div>
+      </div>
+      <div id="chat-input-area">
+        <textarea id="chat-input" placeholder="Ask anything about AP Chem..." rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
+        <button id="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+
+    <!-- ══ REMEMBER PAGE ══ -->
+    <div id="page-remember" class="page">
+      <div class="page-title">Remember</div>
+      <p class="page-sub">Critical rules and AP exam traps</p>
+
+      <div class="remember-hero">
+        <div class="rh-title">Before the Quiz</div>
+        <p>These are the rules that cost points when forgotten. Read once the night before, once the morning of.</p>
+      </div>
+
+      <h3>Key Rules</h3>
+      <div class="sticky y"><h4>Solids & liquids never go in K expressions</h4><p>Pure solids and H₂O (liquid) are always excluded from Ksp, Ka, Kb, and Kc. That's why the salt isn't in Ksp and water isn't in Ka.</p></div>
+      <div class="sticky b"><h4>Ka × Kb = Kw = 1.0 × 10⁻¹⁴</h4><p>Only for a conjugate acid-base pair. Know Ka → instantly know Kb of the conjugate base. pKa + pKb = 14. This is tested constantly.</p></div>
+      <div class="sticky g"><h4>Temperature is the ONLY thing that changes K</h4><p>Concentration, pressure, catalysts — these shift Q, not K. Only temperature actually changes the equilibrium constant value.</p></div>
+      <div class="sticky p"><h4>Stoichiometry before Henderson-Hasselbalch</h4><p>When strong acid/base is added to a buffer: neutralization stoichiometry first → new [HA] and [A⁻] → then H-H. Skipping stoichiometry = wrong answer.</p></div>
+      <div class="sticky y"><h4>Diluting a weak acid increases % dissociation</h4><p>[H⁺] goes down, but the fraction that dissociated goes up. Le Châtelier: adding water shifts equilibrium right.</p></div>
+      <div class="sticky b"><h4>pH = pKa at maximum buffer capacity</h4><p>When [HA] = [A⁻], log(1)=0, so pH = pKa. Choose a buffer whose pKa ≈ your target pH. Effective range: pKa ± 1.</p></div>
+
+      <div class="divider"></div>
+      <h3>Common Exam Traps</h3>
+      <div class="card" style="padding:14px 16px">
+        <div class="trap-list">
+          <div class="trap-item"><div class="trap-num">1</div><div class="trap-text"><strong>(2s)² = 4s², not 2s²</strong>The coefficient gets the exponent. Always expand the full term. Most common Ksp algebra error.</div></div>
+          <div class="trap-item"><div class="trap-num">2</div><div class="trap-text"><strong>HF is NOT a strong acid</strong>Memorize exactly 7 strong acids. Anything else = weak. HF, H₃PO₄, CH₃COOH, HNO₂ are all weak.</div></div>
+          <div class="trap-item"><div class="trap-num">3</div><div class="trap-text"><strong>Conjugate acid vs. base direction</strong>+H⁺ = conjugate acid. −H⁺ = conjugate base. NH₃+H⁺=NH₄⁺ (conjugate acid). NH₃−H⁺=NH₂⁻ (conjugate base).</div></div>
+          <div class="trap-item"><div class="trap-num">4</div><div class="trap-text"><strong>Common ion changes solubility, NOT Ksp</strong>Molar solubility drops with a common ion. Ksp is unchanged (only temp changes K).</div></div>
+          <div class="trap-item"><div class="trap-num">5</div><div class="trap-text"><strong>Salt hydrolysis: ask "which partner was weak?"</strong>That ion hydrolyzes. Strong partner's ion = spectator always.</div></div>
+          <div class="trap-item"><div class="trap-num">6</div><div class="trap-text"><strong>Polyprotic: use Ka1 for pH</strong>Ka2 contributes negligibly. Use only Ka1 unless specifically asked about the second dissociation step.</div></div>
+          <div class="trap-item"><div class="trap-num">7</div><div class="trap-text"><strong>Validate the small-x approximation</strong>x/C × 100% must be &lt;5%. If over 5%, use the quadratic. AP graders check for this on FRQs.</div></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <h3>Formula Sheet</h3>
+      <div class="formula"><span class="cm">── Ksp ──</span>
+Ksp = [ions]^stoich  (no solid)
+x = molar solubility → expand in s → solve
+
+<span class="cm">── pH / pOH ──</span>
+pH = −log[H⁺]   pOH = −log[OH⁻]
+pH + pOH = 14
+Kw = 1.0 × 10⁻¹⁴
+
+<span class="cm">── Weak Acid / Base ──</span>
+x = <span class="hi">√(Ka × C)</span> → pH = −log(x)
+x = √(Kb × C) → pOH = −log(x) → pH=14−pOH
+Ka × Kb = 1.0 × 10⁻¹⁴  (conjugate pair)
+
+<span class="cm">── Buffers ──</span>
+pH = pKa + log(<span class="hi">[A⁻]/[HA]</span>)
+Max capacity: [A⁻]=[HA] → pH = pKa
+Stoichiometry FIRST if strong acid/base added</div>
+    </div>
+
+  </div><!-- end #content -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomnav">
+    <button class="bnav-btn active" onclick="goPage('notes',this)"><span class="bicon">📖</span><span class="blabel">Notes</span></button>
+    <button class="bnav-btn" onclick="goPage('problems',this)"><span class="bicon">✏️</span><span class="blabel">Problems</span></button>
+    <button class="bnav-btn" onclick="goPage('gen',this)"><span class="bicon">⚡</span><span class="blabel">Generator</span></button>
+    <button class="bnav-btn" onclick="goPage('chat',this)"><span class="bicon">🤖</span><span class="blabel">AI Tutor</span></button>
+    <button class="bnav-btn" onclick="goPage('remember',this)"><span class="bicon">⭐</span><span class="blabel">Remember</span></button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+const chatPage = document.getElementById('page-chat');
+function goPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = '';
+  });
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (id === 'chat') {
+    chatPage.style.display = 'flex';
+    chatPage.classList.add('active');
+    setTimeout(() => scrollChat(), 100);
+  } else {
+    document.getElementById('page-' + id).classList.add('active');
+  }
+}
+
+// ═══════════════════════════════════════════
+// NOTES TOGGLE
+// ═══════════════════════════════════════════
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const btn = body.previousElementSibling;
+  const isOpen = body.classList.contains('open');
+  // close all
+  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.section-toggle').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    btn.classList.add('open');
+    setTimeout(() => body.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+  }
+}
+
+// ═══════════════════════════════════════════
+// PROBLEMS
+// ═══════════════════════════════════════════
+const problems = [
+  {tag:'Ksp Expression',q:'Write the Ksp expression for Ag₃PO₄(s) ⇌ 3Ag⁺ + PO₄³⁻',
+   opts:['[Ag⁺][PO₄³⁻]','[Ag⁺]³[PO₄³⁻]/[Ag₃PO₄]','[Ag⁺]³[PO₄³⁻]','[3Ag⁺][PO₄³⁻]'],ans:2,
+   sol:'Ksp = [Ag⁺]³[PO₄³⁻]. Solid never included. Coefficient 3 becomes exponent → [Ag⁺]³, not [3Ag⁺].'},
+  {tag:'ICE Table · Ksp',q:'For Ag₃PO₄ (Ksp = 8.9×10⁻¹⁷), if s = molar solubility, which equals Ksp?',
+   opts:['s⁴','27s⁴','3s⁴','4s³'],ans:1,
+   sol:'[Ag⁺]=3s, [PO₄³⁻]=s. Ksp = (3s)³(s) = 27s³·s = 27s⁴. Remember: (3s)³ = 27s³, not 3s³.'},
+  {tag:'Common Ion Effect',q:'BaSO₄ dissolves in 0.10 M Na₂SO₄ vs. pure water. What changes?',
+   opts:['Both Ksp and solubility decrease','Solubility decreases; Ksp stays same','Both stay the same','Solubility increases'],ans:1,
+   sol:'Common ion SO₄²⁻ shifts equilibrium left (Le Châtelier) → less dissolves. Ksp only changes with temperature, not concentration.'},
+  {tag:'Conjugate Pairs',q:'In NH₃ + H₂O ⇌ NH₄⁺ + OH⁻, what is the conjugate acid of NH₃?',
+   opts:['NH₂⁻','OH⁻','NH₄⁺','H₃O⁺'],ans:2,
+   sol:'NH₃ accepts H⁺ from water → becomes NH₄⁺. Conjugate acid = original + H⁺. NH₃ + H⁺ = NH₄⁺.'},
+  {tag:'Conjugate Pairs',q:'Identify the two conjugate pairs in: H₂PO₄⁻ + OH⁻ ⇌ HPO₄²⁻ + H₂O',
+   opts:['H₂PO₄⁻/OH⁻ and HPO₄²⁻/H₂O','H₂PO₄⁻/HPO₄²⁻ and OH⁻/H₂O','H₂PO₄⁻/H₂O and OH⁻/HPO₄²⁻','HPO₄²⁻/PO₄³⁻ and H₂O/OH⁻'],ans:1,
+   sol:'H₂PO₄⁻ donates H⁺ → HPO₄²⁻ (pair 1). OH⁻ accepts H⁺ → H₂O (pair 2). Each pair differs by exactly one H⁺.'},
+  {tag:'Strong Acid pH',q:'What is the pH of 0.0050 M HNO₃?',
+   opts:['2.00','2.30','5.00','11.70'],ans:1,
+   sol:'HNO₃ is strong → [H⁺]=0.0050=5×10⁻³ M. pH=−log(5×10⁻³)=3−log5=3−0.699=2.30. Common mistake: assuming log(5)=0 → pH=3.'},
+  {tag:'Ka Comparison',q:'Which is stronger: acetic acid (Ka=1.8×10⁻⁵) or HNO₂ (Ka=4.5×10⁻⁴)?',
+   opts:['Acetic acid — smaller Ka is stronger','HNO₂ — larger Ka means more dissociation','They are equal','Cannot determine without concentration'],ans:1,
+   sol:'Larger Ka = stronger acid = more dissociation. Ka for HNO₂ (4.5×10⁻⁴) is ~25× larger than acetic acid (1.8×10⁻⁵). HNO₂ is stronger.'},
+  {tag:'Ka ICE Table',q:'0.25 M HF (Ka=7.2×10⁻⁴). Using the approximation, what is [H⁺]?',
+   opts:['7.2×10⁻⁴ M','1.3×10⁻² M','0.25 M','3.4×10⁻³ M'],ans:1,
+   sol:'x=√(Ka·C)=√(7.2×10⁻⁴ × 0.25)=√(1.8×10⁻⁴)=0.013 M≈1.3×10⁻² M. Check: 0.013/0.25=5.3% — borderline, quadratic preferred but approximation acceptable.'},
+  {tag:'Ka × Kb',q:'Ka of NH₄⁺ = 5.6×10⁻¹⁰. What is Kb of NH₃?',
+   opts:['5.6×10⁻¹⁰','1.0×10⁻¹⁴','1.8×10⁻⁵','1.8×10⁻⁴'],ans:2,
+   sol:'NH₄⁺/NH₃ are a conjugate pair. Ka × Kb = Kw → Kb = 1.0×10⁻¹⁴ / 5.6×10⁻¹⁰ = 1.8×10⁻⁵.'},
+  {tag:'Ka × Kb',q:'If Ka of acetic acid = 1.8×10⁻⁵, what is pKb of acetate ion (CH₃COO⁻)?',
+   opts:['4.74','9.26','5.26','8.74'],ans:1,
+   sol:'pKa = −log(1.8×10⁻⁵) = 4.74. pKa + pKb = 14 → pKb = 14 − 4.74 = 9.26.'},
+  {tag:'Weak Base',q:'0.10 M NH₃ (Kb=1.8×10⁻⁵). What is the pH?',
+   opts:['11.13','2.87','5.13','8.87'],ans:0,
+   sol:'x=√(Kb·C)=√(1.8×10⁻⁵ × 0.10)=√(1.8×10⁻⁶)=1.34×10⁻³ M=[OH⁻]. pOH=−log(1.34×10⁻³)=2.87. pH=14−2.87=11.13.'},
+  {tag:'Salt Hydrolysis',q:'Which solution is BASIC?',
+   opts:['KNO₃','NH₄Cl','Na₂CO₃','FeCl₃'],ans:2,
+   sol:'Na₂CO₃: Na⁺ from NaOH (strong base)=spectator. CO₃²⁻ from H₂CO₃ (weak acid) hydrolyzes→OH⁻=basic. NH₄Cl and FeCl₃ are acidic. KNO₃ is neutral.'},
+  {tag:'Salt Hydrolysis',q:'NaF dissolves in water. What is the direction of hydrolysis for F⁻?',
+   opts:['F⁻ + H₂O → HF + OH⁻ (basic solution)','F⁻ + H₂O → no reaction (neutral)','F⁻ → F²⁻ + H⁺ (acidic)','F⁻ accepts two protons'],ans:0,
+   sol:'F⁻ is the conjugate base of weak acid HF. It hydrolyzes: F⁻ + H₂O ⇌ HF + OH⁻ → produces OH⁻ → basic solution. Kb = Kw/Ka = 1.0×10⁻¹⁴/7.2×10⁻⁴ = 1.4×10⁻¹¹.'},
+  {tag:'Polyprotic',q:'For H₂SO₃ (Ka1=1.5×10⁻², Ka2=6.3×10⁻⁸), how is pH calculated?',
+   opts:['Use Ka2 only','Average Ka1 and Ka2','Use Ka1 only (Ka2 negligible)','Add both Ka values'],ans:2,
+   sol:'Ka1 >> Ka2 by ~6 orders of magnitude. The first dissociation provides essentially all [H⁺]. Ka2 contributes negligibly. Use Ka1 only for pH calculations.'},
+  {tag:'Amphoteric Species',q:'HCO₃⁻ (bicarbonate) is amphoteric. Which statement is TRUE?',
+   opts:['It can only donate H⁺','It can only accept H⁺','It can both donate and accept H⁺','It cannot react with water'],ans:2,
+   sol:'HCO₃⁻ is amphoteric. As acid: HCO₃⁻ → H⁺ + CO₃²⁻. As base: HCO₃⁻ + H⁺ → H₂CO₃. The intermediate species in polyprotic systems are always amphoteric.'},
+  {tag:'Henderson-Hasselbalch',q:'Buffer: 0.20 M CH₃COOH + 0.40 M CH₃COO⁻. pKa = 4.74. pH?',
+   opts:['4.44','4.74','5.04','5.34'],ans:2,
+   sol:'pH = pKa + log([A⁻]/[HA]) = 4.74 + log(0.40/0.20) = 4.74 + log(2) = 4.74 + 0.30 = 5.04. More conjugate base→log positive→pH > pKa. Intuitive.'},
+  {tag:'Buffer · Stoichiometry',q:'Buffer: 0.30 mol CH₃COOH + 0.30 mol CH₃COO⁻ in 1.0 L (pKa=4.74). Add 0.10 mol HCl. New pH?',
+   opts:['4.74','5.04','4.44','3.74'],ans:2,
+   sol:'Stoichiometry first: H⁺ + CH₃COO⁻ → CH₃COOH. CH₃COO⁻: 0.30−0.10=0.20 mol. CH₃COOH: 0.30+0.10=0.40 mol. H-H: pH=4.74+log(0.20/0.40)=4.74−0.30=4.44.'},
+  {tag:'Buffer · Stoichiometry',q:'Same buffer (0.30 mol each, pKa=4.74). Add 0.10 mol NaOH. New pH?',
+   opts:['4.44','4.74','5.04','5.74'],ans:2,
+   sol:'OH⁻ + CH₃COOH → CH₃COO⁻ + H₂O. CH₃COOH: 0.30−0.10=0.20. CH₃COO⁻: 0.30+0.10=0.40. H-H: pH=4.74+log(0.40/0.20)=4.74+0.30=5.04. Opposite direction from adding acid.'},
+  {tag:'% Dissociation',q:'0.10 M acetic acid (Ka=1.8×10⁻⁵) is diluted to 0.010 M. What happens to % dissociation?',
+   opts:['Decreases — less acid present','Stays the same — Ka is constant','Increases — Le Châtelier shifts right','Cannot determine'],ans:2,
+   sol:'At 0.10 M: x=√(1.8×10⁻⁵×0.10)=1.34×10⁻³, %=1.34%. At 0.010 M: x=√(1.8×10⁻⁵×0.010)=4.24×10⁻⁴, %=4.24%. % dissociation increased even though [H⁺] dropped.'},
+  {tag:'Ksp Calculation',q:'Ksp of PbCl₂ = 1.6×10⁻⁵. What is its molar solubility in pure water?',
+   opts:['1.6×10⁻⁵ M','0.016 M','4.0×10⁻⁶ M','0.126 M'],ans:1,
+   sol:'PbCl₂ ⇌ Pb²⁺ + 2Cl⁻. Ksp=4s³=1.6×10⁻⁵. s³=4.0×10⁻⁶. s=∛(4.0×10⁻⁶)=0.016 M. Don\'t forget: (2s)²=4s², so Ksp=(s)(4s²)=4s³.'},
+];
+
+let score = 0, attempted = 0;
+function buildProblems() {
+  const c = document.getElementById('problems-container');
+  c.innerHTML = problems.map((p,i) => `
+    <div class="prob-card" id="pc${i}">
+      <div class="prob-tag">Problem ${i+1} · ${p.tag}</div>
+      <div class="prob-q">${p.q}</div>
+      <div class="prob-choices">${p.opts.map((o,j)=>`<button class="choice-btn" onclick="answerProb(this,${i},${j},${p.ans})">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div>
+      <div class="sol-box" id="sol${i}"><span class="sl">✓ Solution</span>${p.sol}</div>
+    </div>`).join('');
+}
+function answerProb(btn, pIdx, chosen, correct) {
+  const card = document.getElementById('pc'+pIdx);
+  if (card.dataset.answered) return;
+  card.dataset.answered = '1';
+  card.querySelectorAll('.choice-btn').forEach((b,j) => {
+    b.disabled = true;
+    if (j === correct) b.classList.add('correct');
+    else if (b === btn) b.classList.add('wrong');
+  });
+  document.getElementById('sol'+pIdx).classList.add('show');
+  attempted++;
+  if (chosen === correct) score++;
+  document.getElementById('score-chip').textContent = `Score: ${score} / ${attempted}`;
+}
+buildProblems();
+
+// ═══════════════════════════════════════════
+// GENERATOR
+// ═══════════════════════════════════════════
+let selectedTopics = ['ksp'];
+let selectedDiff = 'easy';
+let isGenerating = false;
+
+function toggleTopic(btn, topic) {
+  if (selectedTopics.includes(topic)) {
+    if (selectedTopics.length === 1) return;
+    selectedTopics = selectedTopics.filter(t => t !== topic);
+    btn.classList.remove('sel');
+  } else {
+    selectedTopics.push(topic);
+    btn.classList.add('sel');
+  }
+}
+function setDiff(btn, diff) {
+  selectedDiff = diff;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+async function generateProblem() {
+  if (isGenerating) return;
+  isGenerating = true;
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating...';
+  const result = document.getElementById('gen-result');
+  result.className = '';
+  result.innerHTML = `<div class="card"><div style="display:flex;align-items:center;gap:10px;color:var(--muted);font-size:0.88rem"><div class="dot" style="display:inline-block"></div> Writing your problem...</div></div>`;
+  result.classList.add('show');
+
+  const topicStr = selectedTopics.join(', ');
+  const diffGuide = {easy:'conceptual or straightforward single-step',medium:'two-step calculation or requiring good conceptual understanding',hard:'multi-step or combining multiple concepts'};
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an AP Chemistry problem generator for Units 7-8 (equilibrium, molar solubility, Ksp, Brønsted-Lowry acids/bases, conjugate pairs, Ka, Kb, pH, pOH, strong/weak acids, polyprotic acids, salt hydrolysis, buffers, Henderson-Hasselbalch). Generate EXACTLY ONE multiple choice problem.
+
+Return ONLY valid JSON in this exact format, nothing else:
+{"question":"the full question text","options":["A. option1","B. option2","C. option3","D. option4"],"answer_index":0,"solution":"step-by-step solution explaining the answer clearly, using the same conversational teaching style as if explaining to a student","topic":"topic name"}
+
+answer_index is 0-3 for A-D. Use real numbers. Be specific and AP-exam accurate.`,
+        messages:[{role:'user',content:`Generate a ${diffGuide[selectedDiff]} AP Chemistry problem on: ${topicStr}. Difficulty: ${selectedDiff}.`}]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content.find(b => b.type==='text')?.text || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON');
+    const prob = JSON.parse(jsonMatch[0]);
+    let genAnswered = false;
+
+    result.innerHTML = `
+      <div class="prob-card" id="gen-prob">
+        <div class="prob-tag">Generated · ${prob.topic} · ${selectedDiff.charAt(0).toUpperCase()+selectedDiff.slice(1)}</div>
+        <div class="prob-q">${prob.question}</div>
+        <div class="prob-choices" id="gen-choices">
+          ${prob.options.map((o,i)=>`<button class="choice-btn" onclick="answerGen(this,${i},${prob.answer_index})">${o}</button>`).join('')}
+        </div>
+        <div class="sol-box" id="gen-sol"><span class="sl">✓ Solution</span>${prob.solution}</div>
+      </div>`;
+    result.classList.add('show');
+  } catch(e) {
+    result.innerHTML = `<div class="callout danger"><strong>Generation failed</strong>Check your connection and try again.</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = '✦ Generate Another';
+  isGenerating = false;
+}
+
+function answerGen(btn, chosen, correct) {
+  const btns = document.querySelectorAll('#gen-choices .choice-btn');
+  btns.forEach((b,i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    else if (b === btn) b.classList.add('wrong');
+  });
+  document.getElementById('gen-sol').classList.add('show');
+}
+
+// ═══════════════════════════════════════════
+// AI CHAT
+// ═══════════════════════════════════════════
+let chatHistory = [];
+
+function scrollChat() {
+  const msgs = document.getElementById('chat-messages');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+function chatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+function sendStarter(btn) {
+  document.getElementById('chat-input').value = btn.textContent;
+  btn.closest('.chat-starter')?.remove();
+  sendChat();
+}
+function appendMsg(role, text) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  scrollChat();
+  return div;
+}
+function appendTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = 'typing-indicator';
+  div.innerHTML = `<div class="msg-bubble"><div class="msg-typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  msgs.appendChild(div);
+  scrollChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('chat-send').disabled = true;
+
+  appendMsg('user', text.replace(/</g,'&lt;'));
+  chatHistory.push({role:'user', content: text});
+
+  appendTyping();
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are a friendly, expert AP Chemistry tutor helping a student prepare for their Unit 7-8 quiz tomorrow. The student has been learning about:
+- Molar solubility and Ksp (including ICE tables, common ion effect)
+- Brønsted-Lowry acids/bases and conjugate pairs
+- pH, pOH, Kw
+- Strong vs weak acids and bases (the 7 strong acids)
+- Ka and weak acid ICE tables
+- Kb and the Ka × Kb = Kw relationship
+- Polyprotic acids
+- Salt hydrolysis
+- Buffers and Henderson-Hasselbalch
+
+Teaching style: conversational, clear, use examples, explain WHY not just HOW. Keep responses concise for mobile reading — use short paragraphs. Use simple text formatting (asterisks for bold). When doing math, show steps clearly. Don't be overly formal. The student learns well with intuitive analogies.
+
+If asked something outside Units 7-8, gently redirect to what's relevant for the quiz.`,
+        messages: chatHistory.slice(-10)
+      })
+    });
+    const data = await resp.json();
+    const reply = data.content.find(b=>b.type==='text')?.text || 'Sorry, something went wrong.';
+
+    document.getElementById('typing-indicator')?.remove();
+    chatHistory.push({role:'assistant', content: reply});
+
+    // Format reply: bold, code, line breaks
+    const formatted = reply
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`([^`]+)`/g,'<code>$1</code>')
+      .replace(/\n\n/g,'<br><br>')
+      .replace(/\n/g,'<br>');
+    appendMsg('assistant', formatted);
+  } catch(e) {
+    document.getElementById('typing-indicator')?.remove();
+    appendMsg('assistant', 'Connection error — check your internet and try again.');
+  }
+  document.getElementById('chat-send').disabled = false;
+}
+</script>
+</body>
+</html>
